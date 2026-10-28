@@ -1,0 +1,49 @@
+SWITCH-CONFIGURATIONS
+
+hostname SWI-1
+line console 0 
+password cisco1234
+login 
+enable secret cisco1234
+service password-encryption
+banner motd "Unauthorized Access Is Banned!"
+
+vlan 10
+name Staff
+exit
+
+vlan 20
+name Guests
+exit
+
+vlan 30
+name Servers
+exit
+
+interface f0/1
+switchport mode trunk
+switchport trunk allowed vlan 10,20,30
+
+interface f0/2
+switchport mode access
+switchport access vlan 10
+
+interface f0/3
+switchport mode access
+switchport access vlan 20
+
+interface f0/4
+switchport mode access
+switchport access vlan 30
+
+interface range f0/5-24, g0/1-2
+shutdown
+
+int range f0/2-4
+switchport port-security
+switchport port-security maximum 15
+switchport port-security violation restrict
+exit
+
+copy run start
+

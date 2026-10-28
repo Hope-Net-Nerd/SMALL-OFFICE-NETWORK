@@ -1,0 +1,30 @@
+ISP - CONFIGURATIONS
+
+hostname ISP
+enable secret isp1234
+
+line console 0
+password isp1234
+login
+exit
+
+service password-encryption
+
+int f0/0
+ip address 200.100.0.12 255.255.255.0
+no shut
+exit
+ interface loopback 0
+ip address 8.8.8.8 255.255.255.255
+no shut
+
+banner motd "Unauthorized Access Is Banned!"
+
+router ospf 10
+router-id 4.4.4.4
+network 200.100.0.10 0.0.0.255 area 0
+network 8.8.8.8 0.0.0.0 area 0
+
+copy run start
+
+

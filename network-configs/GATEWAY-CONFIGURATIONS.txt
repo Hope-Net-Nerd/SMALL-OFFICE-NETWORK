@@ -1,0 +1,115 @@
+GATEWAY-CONFIGURATIONS
+
+hostname GATEWAY
+banner motd "Unauthorized Access Is Banned!"
+enable secret gateway1234
+
+line console 0
+password gateway1234
+login
+exit
+
+service password-encryption
+
+interface f0/0
+no shut
+exit
+
+interface f0/0.10
+encapsulation dot1q 10
+ip address 192.168.10.1 255.255.255.0
+exit
+
+interface f0/0.20
+encapsulation dot1q 20
+ip address 192.168.20.1 255.255.255.0
+exit
+
+interface f0/0.30
+encapsulation dot1q 30
+ip address 192.168.30.1 255.255.255.0
+exit
+
+ip dhcp excluded-address 192.168.10.1 192.168.10.10
+ip dhcp excluded-address 192.168.20.1 192.168.20.10
+
+ip dhcp pool STAFF
+network 192.168.10.0 255.255.255.0
+default-router 192.168.10.1
+dns-server 192.168.30.9
+
+ip dhcp pool GUESTS
+network 192.168.20.0 255.255.255.0
+default-router 192.168.20.1
+dns-server 192.168.30.9
+
+
+interface f0/1
+ip address 200.100.0.11 255.255.255.0
+no shut
+exit
+
+router ospf 10
+router-id 3.3.3.3
+passive-interface f0/0.10
+passive-interface f0/0.20
+passive-interface f0/0.30
+network 192.168.10.0 0.0.0.255 area 0
+network 192.168.20.0 0.0.0.255 area 0
+network 192.168.30.0 0.0.0.255 area 0
+network 200.100.0.10 0.0.0.255 area 0
+default-information originate
+
+exit
+
+
+ip domain-lookup
+ip name-server 192.168.30.9
+ip domain-name soho.com
+username admin secret admin1234
+crypto key generate rsa
+
+How many bits in the modulus [512]: 2048
+ip ssh version 2
+line vty 0 4
+transport input ssh
+login local
+exit
+
+
+access-list 10 permit 192.168.10.0 0.0.0.255 
+ip nat pool PUBLIC_POOL 200.100.0.13 200.100.0.20 netmask 255.255.255.0
+ip nat inside source list 10 pool PUBLIC_POOL
+
+int f0/1
+ip nat outside
+exit
+ int f0/0.10
+ip nat inside
+exit
+
+access-list 20 permit 192.168.20.0 0.0.0.255
+ip nat  pool PUBLIC_POOL2 200.100.0.21 200.100.0.30 netmask 255.255.255.0
+ip nat inside source list 20 pool PUBLIC_POOL2
+
+int f0/1
+ip nat outside
+exit
+int f0/0.20
+ip nat inside
+exit
+
+ip access-list extended GUEST-IN
+permit udp 192.168.20.0 0.0.0.255 host 192.168.30.9 eq domain
+deny ip 192.168.20.0 0.0.0.255 192.168.10.0 0.0.0.255
+deny ip 192.168.20.0 0.0.0.255 192.168.30.0 0.0.0.255
+permit ip any any
+exit
+
+interface f0/0.20
+ip access-group GUEST-IN in
+exit
+
+
+copy run start
+
