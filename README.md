@@ -13,7 +13,7 @@ A small office network with three VLANs, a gateway router and a simulated ISP. D
 - DHCP on the gateway
 - Access lists to control guest access
 - PAT (NAT overload)
-- OSPF and a static default route
+- OSPF 
 - SSH remote access
 
 ## Network layout
@@ -37,8 +37,8 @@ A small office network with three VLANs, a gateway router and a simulated ISP. D
 |---|---|---|
 | f0/1 | Trunk | Link to GATEWAY |
 | f0/2 | 10 Staff | Staff device |
-| f0/4 | 20 Guests | Guest devices |
-| f0/3 | 30 Server | Server |
+| f0/3 | 20 Guests | Guest devices |
+| f0/4 | 30 Server | Server |
 | f0/5 to f0/24, g0/1 to g0/2 | Shutdown | Unused |
 
 ## How it works
@@ -75,15 +75,6 @@ To open more ports on SWI-1:
 
 Useful commands on GATEWAY: `show ip nat translations`, `show access-lists`, `show ip route`, `show ip ospf neighbor`.
 Useful commands on SWI-1: `show vlan brief`, `show interfaces trunk`.
-
-## Screenshots
-
-Add yours to the `docs/` folder:
-
-- `docs/guest-ping-internet.png`
-- `docs/guest-website.png`
-- `docs/guest-ping-blocked.png`
-- `docs/nat-translations.png`
 
 ## Lab passwords
 
