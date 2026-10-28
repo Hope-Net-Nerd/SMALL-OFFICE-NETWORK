@@ -37,8 +37,8 @@ A small office network with three VLANs, a gateway router and a simulated ISP. D
 |---|---|---|
 | f0/1 | Trunk | Link to GATEWAY |
 | f0/2 | 10 Staff | Staff device |
-| f0/3 | 30 Servers | Server |
-| f0/4 | 20 Guests | Guest device |
+| f0/4 | 20 Guests | Guest devices |
+| f0/3 | 30 Server | Server |
 | f0/5 to f0/24, g0/1 to g0/2 | Shutdown | Unused |
 
 ## How it works
